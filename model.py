@@ -3,7 +3,6 @@ import torch
 import torch.nn as nn
 from torch.nn import functional as F
 
-
 emb_s = 64
 head_cnt = 8
 block_size = 128
@@ -18,8 +17,6 @@ emb = emb_s*head_cnt
 class attention_layer(nn.Module):
     def __init__(self):
         super().__init__()
-
-
         self.k_proj = nn.Linear(emb, emb)
         self.q_proj = nn.Linear(emb, emb)
         self.v_proj = nn.Linear(emb, emb)
@@ -55,7 +52,6 @@ class attention_layer(nn.Module):
         att = F.softmax(att, dim = -1)
 
         y = att@v # B, T, hs
-
         return y
     
     def forward_multi_attn(self, x):

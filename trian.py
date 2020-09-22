@@ -7,7 +7,7 @@ from torch.utils.data import Dataset
 import torch.optim as optim
 from tqdm import tqdm
 import math
-from model_2 import GPT
+from model import GPT
 
 def top_k_logits(logits, k):
     v, ix = torch.topk(logits, k)
@@ -17,7 +17,6 @@ def top_k_logits(logits, k):
     
 @torch.no_grad()
 def sample(model, x, steps, temperature=1.0, top_k=12):
-    
     block_size = model.get_block_size()
     model.eval()
     for k in range(steps):
@@ -33,7 +32,6 @@ def sample(model, x, steps, temperature=1.0, top_k=12):
         # sample from the distribution or take the most likely
         ix = torch.multinomial(probs, num_samples=1)
         x = torch.cat((x, ix), dim=1)
-
     return x
 
 class CharDataset(Dataset):
@@ -60,7 +58,7 @@ class CharDataset(Dataset):
         return x, y
 
 
-text = open('bd.txt', 'r', encoding='utf-8').read()
+text = open('texts.txt', 'r', encoding='utf-8').read()
 text = text[:20000]
 
 epochs = 1
@@ -70,7 +68,6 @@ lr = 6e-4
 is_train = False
 
 train_dataset = CharDataset(text, block_size)
-
 device = torch.device("cuda:0")
 model = GPT(vocab_size = train_dataset.vocab_size)
 optimizer = torch.optim.AdamW(model.parameters(), lr = lr)
